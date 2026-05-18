@@ -1,7 +1,6 @@
 import "dotenv/config"
 import express from 'express'
 import cors from "cors"
-import cookieParser from "cookie-parser"
 import "./oauth/google.strategy.js"
 import passport from "passport"
 import { isOriginAllowed } from "./utils/http.utils.js"
@@ -9,7 +8,6 @@ import { isOriginAllowed } from "./utils/http.utils.js"
 let app = express()
 app.set("trust proxy", 1)
 app.use(express.json({ limit: "16kb" }))
-app.use(cookieParser())
 
 app.use(
   cors({
@@ -20,8 +18,6 @@ app.use(
 
       return callback(null, false)
     },
-
-    credentials: true,
   })
 )
 

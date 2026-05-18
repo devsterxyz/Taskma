@@ -4,13 +4,14 @@ import Home from './components/Pages/Home'
 import { apiCall } from './utils/api'
 import { getInitialTheme, THEME_STORAGE_KEY } from './utils/theme'
 import SignupPage from './components/Pages/SignupPage'
+import OAuthSuccess from './components/Pages/OAuthSuccess'
 
 interface CurrentUser {
   name: string
   email: string
 }
 
-function App() {
+function TaskmaApp() {
   const [currentPage, setCurrentPage] = useState<'home' | 'auth'>('auth')
   const [isLoading, setIsLoading] = useState(true)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -46,9 +47,9 @@ function App() {
 
       } else {
 
-        localStorage.removeItem(
-          'currentUser'
-        )
+        localStorage.removeItem('currentUser')
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
 
         setCurrentUser(null)
 
@@ -62,9 +63,9 @@ function App() {
         error
       )
 
-      localStorage.removeItem(
-        'currentUser'
-      )
+      localStorage.removeItem('currentUser')
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
 
       setCurrentUser(null)
 
@@ -76,32 +77,7 @@ function App() {
     }
   }
 
-  const params =
-    new URLSearchParams(
-      window.location.search
-    )
-
-  const oauth =
-    params.get("oauth")
-
-  if (oauth === "success") {
-
-    setTimeout(() => {
-
-      validateSession()
-
-      window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname
-      )
-
-    }, 200)
-
-  } else {
-
-    validateSession()
-  }
+  validateSession()
 
 }, [])
 
@@ -123,6 +99,8 @@ function App() {
       console.error('Error during logout:', error)
     } finally {
       localStorage.removeItem('currentUser')
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
       setCurrentUser(null)
       setCurrentPage('auth')
       setIsLoggingOut(false)
@@ -247,6 +225,14 @@ function App() {
       )}
     </div>
   )
+}
+
+function App() {
+  if (window.location.pathname === '/oauth-success') {
+    return <OAuthSuccess />
+  }
+
+  return <TaskmaApp />
 }
 
 export default App

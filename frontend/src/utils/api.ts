@@ -14,11 +14,14 @@ export const apiCall = async (
 
   headers.set('Content-Type', 'application/json');
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const token = localStorage.getItem('accessToken');
+
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  return fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
-    credentials: 'include',
   });
-
-  return response;
 };
