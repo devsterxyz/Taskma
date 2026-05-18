@@ -1,26 +1,9 @@
 import 'dotenv/config'
 import { createUser, findUserByEmail, updateUser } from "../db/user.db.js"
 import { generateAccessAndRefreshTokens } from '../utils/token.utils.js';
-import type { CookieOptions, Request, Response } from "express";
+import { getCookieOptions } from "../utils/http.utils.js";
+import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
-
-const getCookieOptions = (req: Request): CookieOptions => {
-  const forwardedProto = req.headers["x-forwarded-proto"];
-  const isHttpsRequest =
-    req.secure ||
-    forwardedProto === "https" ||
-    req.hostname !== "localhost";
-
-  return {
-  httpOnly: true,
-  secure: isHttpsRequest,
-  sameSite: isHttpsRequest ? "none" : "lax",
-  domain: isHttpsRequest
-    ? "taskma-p59o.onrender.com"
-    : undefined,
-  path: "/",
-};
-};
 
 const registerUser = async (req: Request, res: Response) => {
   const {email, name, password} = req.body

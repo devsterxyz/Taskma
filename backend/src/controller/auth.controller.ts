@@ -1,30 +1,9 @@
-import type { CookieOptions, Request, Response } from "express";
+import type { Request, Response } from "express";
 import { oauthLogin } from "../services/auth.service.js";
+import { getCookieOptions } from "../utils/http.utils.js";
 
 const getFrontendUrl = () => {
   return (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
-};
-
-const getCookieOptions = (req: Request): CookieOptions => {
-  const forwardedProto = req.headers["x-forwarded-proto"];
-  const isLocalhost =
-    req.hostname === "localhost" ||
-    req.hostname === "127.0.0.1" ||
-    req.hostname === "::1";
-  const isHttpsRequest =
-    req.secure ||
-    forwardedProto === "https" ||
-    !isLocalhost;
-
-  return {
-  httpOnly: true,
-  secure: isHttpsRequest,
-  sameSite: isHttpsRequest ? "none" : "lax",
-  domain: isHttpsRequest
-    ? "taskma-p59o.onrender.com"
-    : undefined,
-  path: "/",
-};
 };
 
 export const googleCallback = async (req: Request, res: Response) => {

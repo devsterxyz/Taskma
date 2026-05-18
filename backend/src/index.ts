@@ -4,29 +4,20 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import "./oauth/google.strategy.js"
 import passport from "passport"
+import { isOriginAllowed } from "./utils/http.utils.js"
 
 let app = express()
 app.set("trust proxy", 1)
 app.use(express.json({ limit: "16kb" }))
 app.use(cookieParser())
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  process.env.FRONTEND_URL!,
-]
 app.use(
   cors({
     origin: function (origin, callback) {
+      if (isOriginAllowed(origin)) {
+        return callback(null, true)
+      }
 
-      if (!origin) {
-        return callback(null, true)
-      }
-      if (
-        origin &&
-        allowedOrigins.includes(origin)
-      ) {
-        return callback(null, true)
-      }
       return callback(null, false)
     },
 
