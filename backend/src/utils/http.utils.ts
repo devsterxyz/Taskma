@@ -48,10 +48,9 @@ export const getCookieOptions = (req: Request): CookieOptions => {
   const cookieDomain = process.env.COOKIE_DOMAIN?.trim();
 
   return {
-    httpOnly: true,
-    secure: requiresCrossSiteCookie || isHttpsRequest,
-    sameSite: requiresCrossSiteCookie || isHttpsRequest ? "none" : "lax",
-    path: "/",
-    ...(cookieDomain ? { domain: cookieDomain } : {}),
-  };
+  httpOnly: true,
+  secure: requiresCrossSiteCookie || isHttpsRequest,
+  sameSite: requiresCrossSiteCookie || isHttpsRequest ? "none" : "lax",
+  path: "/",
+};
 };
